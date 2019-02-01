@@ -86,17 +86,27 @@ class RNN(object):
 		s = np.zeros((len(x) + 1, self.hidden_dims))
 		y = np.zeros((len(x), self.out_vocab_size))
 
+		# print("x\n", x)
+		# print("s\n", s)
+		# print("y\n", y)
+		# print("U\n", self.U)
+		# print("V\n", self.V)
+		# print("W\n", self.W)
+
 		for t in range(len(x)):
 			##########################
 			# --- your code here --- #
 			##########################
 
-			if t != 0:
-				s[t] = sigmoid(self.V * x[t] + self.U * s[t - 1])
-			else:
-				s[t] = sigmoid(self.V * x[t] + self.U * np.zeros(len(x)))
+			#Create one hot vector
+			oh = np.zeros(self.vocab_size)
+			oh[x[t]] = 1
 
-			y[t] = softmax(self.W * s[t])
+			# print("One hot vector\n", oh)
+
+			s[t] = sigmoid(np.dot(self.V, oh) + np.dot(self.U, s[t - 1]))
+
+			y[t] = softmax(np.dot(self.W, s[t]))
 
 		return y, s
 
