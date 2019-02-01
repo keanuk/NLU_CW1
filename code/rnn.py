@@ -90,7 +90,14 @@ class RNN(object):
 			##########################
 			# --- your code here --- #
 			##########################
-		
+
+			if t != 0:
+				s[t] = rnnmath.sigmoid(self.V * x[t] + self.U * s[t - 1])
+			else:
+				s[t] = rnnmath.sigmoid(self.V * x[t] + self.U * np.zeros(len(x)))
+
+			y[t] = rnnmath.softmax(self.W * s[t])
+
 		return y, s
 	
 	def acc_deltas(self, x, d, y, s):
@@ -204,6 +211,10 @@ class RNN(object):
 		##########################
 		# --- your code here --- #
 		##########################
+
+		p = self.predict(x)
+
+		self.deltaU = d[]
 		
 		return loss
 
