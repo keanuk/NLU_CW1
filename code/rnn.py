@@ -131,30 +131,30 @@ class RNN(object):
 		no return values
 		'''
 
+		# print("x\n", x)
+		# print("d\n", d)
+		# print("y\n", y)
+		# print("s\n", s)
+
 		for t in reversed(range(len(x))):
 			##########################
 			# --- your code here --- #
 			##########################
 			gprime = np.ones(len(y[t]))
-			fprime = np.multiply(s[t], np.subtract(np.ones(len(y[t])), s[t]))
-			oh = self.getOneHot(x[t])
+			fprime = np.multiply(s[t], np.subtract(np.ones(len(s[t])), s[t]))
 
-			a = np.subtract(d[t], y[t])
+			xoh = self.getOneHot(x[t])
+			doh = self.getOneHot(d[t])
+
+			a = np.subtract(doh, y[t])
 			b = np.multiply(a, gprime)
 			self.deltaW += np.outer(b, s[t])
 
-			c = np.dot(np.transpose(self.deltaW), b)
+			c = np.dot(np.transpose(self.W), b)
 			e = np.multiply(c, fprime)
-			self.deltaV += np.outer(e, oh)
+			self.deltaV += np.outer(e, xoh)
 
-			self.deltaU = np.outer(e, s[t - 1])
-
-
-
-		print("Delta W\n", self.deltaW)
-		print("Delta V\n", self.deltaV)
-		print("Delta U\n", self.deltaU)
-
+			self.deltaU += np.outer(e, s[t - 1])
 
 	def acc_deltas_np(self, x, d, y, s):
 		'''
@@ -247,9 +247,6 @@ class RNN(object):
 		##########################
 
 		y, s = self.predict(x)
-
-		# print("d\n", d)
-		# print("y\n", y)
 
 		for t in range(len(d)):
 			doh = self.getOneHot(d[t])
