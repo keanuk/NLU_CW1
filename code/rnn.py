@@ -68,6 +68,11 @@ class RNN(object):
 		self.deltaV.fill(0.0)
 		self.deltaW.fill(0.0)
 
+	def getOneHot(self, index):
+		x = np.zeros(self.vocab_size)
+		x[index] = 1
+		return x
+
 	def predict(self, x):
 		'''
 		predict an output sequence y for a given input sequence x
@@ -99,8 +104,7 @@ class RNN(object):
 			##########################
 
 			#Create one hot vector
-			oh = np.zeros(self.vocab_size)
-			oh[x[t]] = 1
+			oh = self.getOneHot(x[t])
 
 			# print("One hot vector\n", oh)
 
@@ -131,7 +135,25 @@ class RNN(object):
 			##########################
 			# --- your code here --- #
 			##########################
-			print("fix")
+			gprime = np.ones(len(y[t]))
+			fprime = np.multiply(s[t], np.subtract(np.ones(len(y[t])), s[t]))
+			oh = self.getOneHot(x[t])
+
+			a = np.subtract(d[t], y[t])
+			b = np.multiply(a, gprime)
+			self.deltaW += np.outer(b, s[t])
+
+			c = np.dot(np.transpose(self.deltaW), b)
+			e = np.multiply(c, fprime)
+			self.deltaV += np.outer(e, oh)
+
+			self.deltaU = np.outer(e, s[t - 1])
+
+
+
+		print("Delta W\n", self.deltaW)
+		print("Delta V\n", self.deltaV)
+		print("Delta U\n", self.deltaU)
 
 
 	def acc_deltas_np(self, x, d, y, s):
@@ -224,9 +246,14 @@ class RNN(object):
 		# --- your code here --- #
 		##########################
 
-		p = self.predict(x)
+		y, s = self.predict(x)
 
-		# self.deltaU = d[]
+		# print("d\n", d)
+		# print("y\n", y)
+
+		for t in range(len(d)):
+			doh = self.getOneHot(d[t])
+			loss = loss - np.dot(doh, np.log(y[t]))
 
 		return loss
 
@@ -317,6 +344,14 @@ class RNN(object):
 		##########################
 		# --- your code here --- #
 		##########################
+
+		length = 0
+
+		for x, d in zip(X, D):
+			length = length + len(d)
+			mean_loss = mean_loss + self.compute_loss(x, d)
+
+		mean_loss = mean_loss / length
 
 		return mean_loss
 
