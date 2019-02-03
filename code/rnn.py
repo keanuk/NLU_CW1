@@ -140,21 +140,18 @@ class RNN(object):
 			##########################
 			# --- your code here --- #
 			##########################
-			gprime = np.ones(len(y[t]))
-			fprime = np.multiply(s[t], np.subtract(np.ones(len(s[t])), s[t]))
-
 			xoh = self.getOneHot(x[t])
 			doh = self.getOneHot(d[t])
 
-			a = np.subtract(doh, y[t])
-			b = np.multiply(a, gprime)
-			self.deltaW += np.outer(b, s[t])
+			gprime = np.ones(len(y[t]))
+			fprime = np.multiply(s[t], np.subtract(np.ones(len(s[t])), s[t]))
 
-			c = np.dot(np.transpose(self.W), b)
-			e = np.multiply(c, fprime)
-			self.deltaV += np.outer(e, xoh)
+			outp = np.multiply(np.subtract(doh, y[t]), gprime)
+			inp = np.multiply(np.dot(np.transpose(self.W), outp), fprime)
 
-			self.deltaU += np.outer(e, s[t - 1])
+			self.deltaW += np.outer(outp, s[t])
+			self.deltaV += np.outer(inp, xoh)
+			self.deltaU += np.outer(inp, s[t - 1])
 
 	def acc_deltas_np(self, x, d, y, s):
 		'''
@@ -201,7 +198,19 @@ class RNN(object):
 			##########################
 			# --- your code here --- #
 			##########################
-			print("fix")
+			xoh = self.getOneHot(x[t])
+			doh = self.getOneHot(d[t])
+
+			gprime = np.ones(len(y[t]))
+			fprime = np.multiply(s[t], np.subtract(np.ones(len(s[t])), s[t]))
+
+			outp = np.multiply(np.subtract(doh, y[t]), gprime)
+			inp = np.multiply(np.dot(np.transpose(self.U), inp), fprime)
+
+			self.deltaW += np.outer(outp, s[t])
+			self.deltaV += np.outer(inp, xoh)
+			self.deltaU += np.outer(inp, s[t - 1])
+			
 
 
 	def acc_deltas_bptt_np(self, x, d, y, s, steps):
