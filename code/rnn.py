@@ -130,12 +130,6 @@ class RNN(object):
 
 		no return values
 		'''
-
-		print("x\n", x)
-		print("d\n", d)
-		print("y\n", y)
-		print("s\n", s)
-
 		for t in reversed(range(len(x))):
 			##########################
 			# --- your code here --- #
@@ -148,7 +142,6 @@ class RNN(object):
 
 			outp = np.multiply(np.subtract(doh, y[t]), gprime)
 			inp = np.multiply(np.dot(np.transpose(self.W), outp), fprime)
-			print("inp\n", inp)
 
 			self.deltaW += np.outer(outp, s[t])
 			self.deltaV += np.outer(inp, xoh)
@@ -196,29 +189,33 @@ class RNN(object):
 		'''
 
 		for t in reversed(range(len(x))):
-			# print("time {0}".format(t))
+			print("time {0}".format(t))
 			##########################
 			# --- your code here --- #
 			##########################
 
-			print("Time ", t)
-
-			xoh = self.getOneHot(x[t - steps])
+			xoh = self.getOneHot(x[t])
 			doh = self.getOneHot(d[t])
 
 			gprime = np.ones(len(y[t]))
-			fprime = np.multiply(s[t - steps], np.subtract(np.ones(len(s[t])), s[t - steps]))
+			fprime = np.multiply(s[t], np.subtract(np.ones(len(s[t])), s[t]))
 
 			outp = np.multiply(np.subtract(doh, y[t]), gprime)
-
-			lastInp = np.multiply(np.dot(np.transpose(self.W), np.multiply(np.subtract(self.getOneHot(d[t - steps + 1]), y[t - steps + 1]), gprime)), np.multiply(s[t - steps + 1], np.subtract(np.ones(len(s[t])), s[t - steps + 1])))
-
-			inp = np.multiply(np.dot(np.transpose(self.U), lastInp), fprime)
+			inp = np.multiply(np.dot(np.transpose(self.W), outp), fprime)
 
 			self.deltaW += np.outer(outp, s[t])
 			self.deltaV += np.outer(inp, xoh)
-			self.deltaU += np.outer(inp, s[t - steps - 1])
-			
+			self.deltaU += np.outer(inp, s[t - 1])
+
+			for i in range(steps):
+				sxoh = self.getOneHot(x[t - i])
+				sfprime = np.multiply(s[t - i], np.subtract(np.ones(len(s[t - i])), s[t - i]))
+				sinp = inp = np.multiply(np.dot(np.transpose(self.U), inp), sfprime)
+
+				self.deltaV += np.outer(inp, sxoh)
+				self.deltaU += np.outer(inp, s[t - i - 1])
+
+				inp = sinp
 
 
 	def acc_deltas_bptt_np(self, x, d, y, s, steps):
