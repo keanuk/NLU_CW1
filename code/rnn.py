@@ -131,10 +131,10 @@ class RNN(object):
 		no return values
 		'''
 
-		# print("x\n", x)
-		# print("d\n", d)
-		# print("y\n", y)
-		# print("s\n", s)
+		print("x\n", x)
+		print("d\n", d)
+		print("y\n", y)
+		print("s\n", s)
 
 		for t in reversed(range(len(x))):
 			##########################
@@ -148,6 +148,7 @@ class RNN(object):
 
 			outp = np.multiply(np.subtract(doh, y[t]), gprime)
 			inp = np.multiply(np.dot(np.transpose(self.W), outp), fprime)
+			print("inp\n", inp)
 
 			self.deltaW += np.outer(outp, s[t])
 			self.deltaV += np.outer(inp, xoh)
@@ -193,6 +194,9 @@ class RNN(object):
 
 		no return values
 		'''
+
+		inp = np.zeros((len(x) + steps, self.hidden_dims))
+
 		for t in reversed(range(len(x))):
 			# print("time {0}".format(t))
 			##########################
@@ -205,11 +209,11 @@ class RNN(object):
 			fprime = np.multiply(s[t], np.subtract(np.ones(len(s[t])), s[t]))
 
 			outp = np.multiply(np.subtract(doh, y[t]), gprime)
-			inp = np.multiply(np.dot(np.transpose(self.U), inp), fprime)
+			inp[t - steps] = np.multiply(np.dot(np.transpose(self.U), inp[t - steps + 1]), fprime[t - steps])
 
 			self.deltaW += np.outer(outp, s[t])
-			self.deltaV += np.outer(inp, xoh)
-			self.deltaU += np.outer(inp, s[t - 1])
+			self.deltaV += np.outer(inp[t - steps], xoh[t - steps])
+			self.deltaU += np.outer(inp[t - steps], s[t - steps - 1])
 			
 
 
