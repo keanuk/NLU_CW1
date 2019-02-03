@@ -443,9 +443,9 @@ class RNN(object):
 				stdout.write("\tinstance 1")
 			for i in range(len(X)):
 				c = i+1
-				if log:
-					stdout.write("\b"*len(str(i)))
-					stdout.write("{0}".format(c))
+				# if log:
+				# 	stdout.write("\b"*len(str(i)))
+				# 	stdout.write("{0}".format(c))
 					# stdout.flush()
 				p = permutation[i]
 				x_p = X[p]
