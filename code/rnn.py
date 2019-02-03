@@ -195,25 +195,29 @@ class RNN(object):
 		no return values
 		'''
 
-		inp = np.zeros((len(x) + steps, self.hidden_dims))
-
 		for t in reversed(range(len(x))):
 			# print("time {0}".format(t))
 			##########################
 			# --- your code here --- #
 			##########################
-			xoh = self.getOneHot(x[t])
+
+			print("Time ", t)
+
+			xoh = self.getOneHot(x[t - steps])
 			doh = self.getOneHot(d[t])
 
 			gprime = np.ones(len(y[t]))
-			fprime = np.multiply(s[t], np.subtract(np.ones(len(s[t])), s[t]))
+			fprime = np.multiply(s[t - steps], np.subtract(np.ones(len(s[t])), s[t - steps]))
 
 			outp = np.multiply(np.subtract(doh, y[t]), gprime)
-			inp[t - steps] = np.multiply(np.dot(np.transpose(self.U), inp[t - steps + 1]), fprime[t - steps])
+
+			lastInp = np.multiply(np.dot(np.transpose(self.W), np.multiply(np.subtract(self.getOneHot(d[t - steps + 1]), y[t - steps + 1]), gprime)), np.multiply(s[t - steps + 1], np.subtract(np.ones(len(s[t])), s[t - steps + 1])))
+
+			inp = np.multiply(np.dot(np.transpose(self.U), lastInp), fprime)
 
 			self.deltaW += np.outer(outp, s[t])
-			self.deltaV += np.outer(inp[t - steps], xoh[t - steps])
-			self.deltaU += np.outer(inp[t - steps], s[t - steps - 1])
+			self.deltaV += np.outer(inp, xoh)
+			self.deltaU += np.outer(inp, s[t - steps - 1])
 			
 
 
