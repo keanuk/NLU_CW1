@@ -91,13 +91,6 @@ class RNN(object):
 		s = np.zeros((len(x) + 1, self.hidden_dims))
 		y = np.zeros((len(x), self.out_vocab_size))
 
-		# print("x\n", x)
-		# print("s\n", s)
-		# print("y\n", y)
-		# print("U\n", self.U)
-		# print("V\n", self.V)
-		# print("W\n", self.W)
-
 		for t in range(len(x)):
 			##########################
 			# --- your code here --- #
@@ -168,6 +161,22 @@ class RNN(object):
 		##########################
 		# --- your code here --- #
 		##########################
+
+		t = len(x) - 1
+
+		doh = self.getOneHot(d[0])
+		gprime = np.ones(len(y[-1]))
+		outp = np.multiply(np.subtract(doh, y[-1]), gprime)
+		self.deltaW += np.outer(outp, s[-2])
+
+		xoh = self.getOneHot(x[t])
+
+		fprime = np.multiply(s[t], np.subtract(np.ones(len(s[t])), s[t]))
+
+		inp = np.multiply(np.dot(np.transpose(self.W), outp), fprime)
+
+		self.deltaV += np.outer(inp, xoh)
+		self.deltaU += np.outer(inp, s[t - 1])
 
 
 	def acc_deltas_bptt(self, x, d, y, s, steps):
@@ -240,6 +249,30 @@ class RNN(object):
 		# --- your code here --- #
 		##########################
 
+		t = len(x) - 1
+
+		xoh = self.getOneHot(x[t])
+		doh = self.getOneHot(d[0])
+
+		gprime = np.ones(len(y[t]))
+		fprime = np.multiply(s[t], np.subtract(np.ones(len(s[t])), s[t]))
+
+		outp = np.multiply(np.subtract(doh, y[t]), gprime)
+		inp = np.multiply(np.dot(np.transpose(self.W), outp), fprime)
+
+		self.deltaW += np.outer(outp, s[t])
+		self.deltaV += np.outer(inp, xoh)
+		self.deltaU += np.outer(inp, s[t - 1])
+
+		for i in range(steps):
+			i = i + 1
+			sxoh = self.getOneHot(x[t - i])
+			sfprime = np.multiply(s[t - i], np.subtract(np.ones(len(s[t - i])), s[t - i]))
+			inp = np.multiply(np.dot(np.transpose(self.U), inp), sfprime)
+
+			self.deltaV += np.outer(inp, sxoh)
+			self.deltaU += np.outer(inp, s[t - i - 1])
+
 
 	def compute_loss(self, x, d):
 		'''
@@ -286,6 +319,11 @@ class RNN(object):
 		# --- your code here --- #
 		##########################
 
+		y, s = self.predict(x)
+
+		doh = self.getOneHot(d[0])
+		loss = loss - np.dot(doh, np.log(y[-1]))
+
 		return loss
 
 
@@ -305,7 +343,24 @@ class RNN(object):
 		# --- your code here --- #
 		##########################
 
-		return 0
+		y, s = self.predict(x)
+
+		print("x\n", x)
+
+		print("y\n", y[-1])
+
+		print("y argmax: ", np.amax(y[-1]))
+		
+		print("d: ", d[0])
+
+		loss = self.compute_loss_np(x, d)
+
+		print("Loss: ", loss)
+
+		if(np.amax(y) == d[0]):
+			return 1
+		else:
+			return 0
 
 
 	def compare_num_pred(self, x, d):
