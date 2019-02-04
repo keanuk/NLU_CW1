@@ -755,6 +755,10 @@ if __name__ == "__main__":
 		# --- your code here --- #
 		##########################
 
+		docs = load_lm_dataset(data_folder + '/wiki-test.txt')
+		S_test = docs_to_indices(docs, word_to_num, 1, 1)
+		X_test, D_test = seqs_to_lmXY(S_test)
+
 		# from tempfile import TemporaryFile
 
 		# rnnU = TemporaryFile()
@@ -851,12 +855,16 @@ if __name__ == "__main__":
 		V = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.V.npy')
 		W = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.W.npy')
 
+		r.U = U
+		r.V = V
+		r.W = W
 
+		run_loss = r.compute_mean_loss(X_test, D_test)
+		adjusted_loss = adjust_loss(run_loss, fraction_lost, q)
+		unadjusted_loss = adjust_loss(run_loss, fraction_lost, q, "HARD MODE")
 
-		run_loss = -1
-		adjusted_loss = -1
-
-		print("Unadjusted: %.03f" % np.exp(run_loss))
+		print("Mean loss: ", run_loss)
+		print("Unadjusted: %.03f" % np.exp(unadjusted_loss))
 		print("Adjusted for missing vocab: %.03f" % np.exp(adjusted_loss))
 
 
