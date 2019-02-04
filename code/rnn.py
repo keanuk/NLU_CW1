@@ -661,7 +661,7 @@ if __name__ == "__main__":
 		code for training language model.
 		change this to different values, or use it to get you started with your own testing class
 		'''
-		train_size = 1000
+		train_size = 25000
 		dev_size = 1000
 		vocab_size = 2000
 
@@ -708,10 +708,10 @@ if __name__ == "__main__":
 
 		r = RNN(vocab_size,hdim,vocab_size)
 
-		r.train(X_train, D_train, X_dev, D_dev, epochs=1, learning_rate=lr, anneal=5, back_steps=lookback, batch_size=100, min_change=0.0001, log=True)
-		np.save('rnn.U.npy', r.U)
-		np.save('rnn.V.npy', r.V)
-		np.save('rnn.W.npy', r.W)
+		# r.train(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=lr, anneal=5, back_steps=lookback, batch_size=100, min_change=0.0001, log=True)
+		# np.save('rnn.U.npy', r.U)
+		# np.save('rnn.V.npy', r.V)
+		# np.save('rnn.W.npy', r.W)
 
 		# All combinations for 2a
 		# r25 = RNN(vocab_size,25,vocab_size)
@@ -790,6 +790,12 @@ if __name__ == "__main__":
 		# r50 = RNN(vocab_size,50,vocab_size)
 		# r50.train(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.05, anneal=5, back_steps=5, batch_size=100, min_change=0.0001, log=True)
 		# print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
+
+
+		U = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.U.npy')
+		V = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.V.npy')
+		W = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.W.npy')
+
 
 
 		run_loss = -1
