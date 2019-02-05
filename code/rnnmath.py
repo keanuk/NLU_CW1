@@ -23,12 +23,14 @@ def fraq_loss(vocab, word_to_num, vocabsize):
 	return fraction_lost
 
 def adjust_loss(loss, fracloss, q, mode='basic'):
-	if mode == 'basic':
-		# remove freebies only: score if had no UNK
-		return (loss + fracloss*np.log(fracloss))/(1 - fracloss)
-	else:
-		# remove freebies, replace with best prediction on remaining
-		return loss + fracloss*np.log(fracloss) - fracloss*np.log(q)
+    if mode == 'basic':
+        # remove freebies only: score if had no UNK
+        print("Fracloss: ", fracloss)
+        print("Loss: ", loss)
+        return (loss + fracloss*np.log(fracloss))/(1 - fracloss)
+    else:
+        # remove freebies, replace with best prediction on remaining
+        return loss + fracloss*np.log(fracloss) - fracloss*np.log(q)
 
 
 
