@@ -1,29 +1,5 @@
 Retained 2000 words from 9954 (88.35% of all tokens)
 
-
-Training model for 10 epochs
-training set: 25000 sentences (batch size 100)
-Optimizing loss on 1000 sentences
-Vocab size: 2000
-Hidden units: 25
-Steps for back propagation: 5
-Initial learning rate set to 0.5, annealing set to 5
-
-calculating initial mean loss on dev set: 7.798662515757492
-
-epoch 1, learning rate 0.5000	instance 1	epoch done in 607.42 seconds	new loss: 4.794472762174237
-epoch 2, learning rate 0.4167	instance 1	epoch done in 624.63 seconds	new loss: 4.729570699166502
-epoch 3, learning rate 0.3571	instance 1	epoch done in 632.19 seconds	new loss: 4.63950616855656
-epoch 4, learning rate 0.3125	instance 1	epoch done in 622.40 seconds	new loss: 4.6037027871827645
-epoch 5, learning rate 0.2778	instance 1	epoch done in 629.77 seconds	new loss: 4.574999776114233
-epoch 6, learning rate 0.2500	instance 1	epoch done in 634.22 seconds	new loss: 4.524483784915139
-epoch 7, learning rate 0.2273	instance 1	epoch done in 625.40 seconds	new loss: 4.508411388619898
-epoch 8, learning rate 0.2083	instance 1	epoch done in 625.35 seconds	new loss: 4.491795660911412
-epoch 9, learning rate 0.1923	instance 1	epoch done in 634.68 seconds	new loss: 4.487813441937377
-epoch 10, learning rate 0.1786	instance 1	epoch done in 624.73 seconds	new loss: 4.458638459573175
-
-training finished after reaching maximum of 10 epochs
-best observed loss was 4.458638459573175, at epoch 10
-setting U, V, W to matrices from best epoch
-Unadjusted: 0.368
-Adjusted for missing vocab: 0.368
+Mean loss:  4.463430899379328
+Unadjusted: 86.785
+Adjusted for missing vocab: 117.732

@@ -348,6 +348,10 @@ class RNN(object):
 
 		y, s = self.predict(x)
 
+		# print("y: ", y[-1])
+		# print("d: ", d[0])
+		# print("argmax(y): ", np.argmax(y[-1]))
+
 		if(np.argmax(y[-1]) == d[0]):
 			return 1
 		else:
@@ -751,15 +755,10 @@ if __name__ == "__main__":
 		# --- your code here --- #
 		##########################
 
-		docs = load_lm_dataset(data_folder + '/wiki-test.txt')
-		S_test = docs_to_indices(docs, word_to_num, 1, 1)
+		# load test data
+		sents = load_lm_dataset(data_folder + '/wiki-test.txt')
+		S_test = docs_to_indices(sents, word_to_num, 1, 1)
 		X_test, D_test = seqs_to_lmXY(S_test)
-
-		# from tempfile import TemporaryFile
-
-		# rnnU = TemporaryFile()
-		# rnnV = TemporaryFile()
-		# rnnW = TemporaryFile()
 
 		r = RNN(vocab_size,hdim,vocab_size)
 
@@ -767,6 +766,22 @@ if __name__ == "__main__":
 		# np.save('rnn.U.npy', r.U)
 		# np.save('rnn.V.npy', r.V)
 		# np.save('rnn.W.npy', r.W)
+
+		U = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.U.npy')
+		V = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.V.npy')
+		W = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.W.npy')
+
+		r.U = U
+		r.V = V
+		r.W = W
+
+		run_loss = r.compute_mean_loss(X_test, D_test)
+		adjusted_loss = adjust_loss(run_loss, fraction_lost, q)
+
+		print("Mean loss: ", run_loss)
+		print("Unadjusted: %.03f" % np.exp(run_loss))
+		print("Adjusted for missing vocab: %.03f" % np.exp(adjusted_loss))
+
 
 		# All combinations for 2a
 		# r25 = RNN(vocab_size,25,vocab_size)
@@ -846,28 +861,12 @@ if __name__ == "__main__":
 		# r50.train(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.05, anneal=5, back_steps=5, batch_size=100, min_change=0.0001, log=True)
 		# print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
 
-
-		U = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.U.npy')
-		V = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.V.npy')
-		W = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.W.npy')
-
-		r.U = U
-		r.V = V
-		r.W = W
-
-		run_loss = r.compute_mean_loss(X_test, D_test)
-		adjusted_loss = adjust_loss(run_loss, fraction_lost, q)
-
-		print("Unadjusted: %.03f" % np.exp(run_loss))
-		print("Adjusted for missing vocab: %.03f" % np.exp(adjusted_loss))
-
-
 	if mode == "train-np":
 		'''
 		starter code for parameter estimation.
 		change this to different values, or use it to get you started with your own testing class
 		'''
-		train_size = 1000
+		train_size = 2000
 		dev_size = 1000
 		vocab_size = 2000
 
@@ -905,90 +904,108 @@ if __name__ == "__main__":
 		# --- your code here --- #
 		##########################
 
-		# r = RNN(vocab_size, hdim, vocab_size)
-		# r.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=lr, anneal=5, back_steps=lookback, batch_size=100, min_change=0.0001, log=True)
-
-		r25 = RNN(vocab_size,25,vocab_size)
-		r25.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.5, anneal=5, back_steps=0, batch_size=100, min_change=0.0001, log=True)
-		# print("\n==========================\nMatrix U:\n", r25.U, "\nMatrix V:\n", r25.V, "\nMatrix W:\n", r25.W, "\n===========================\n")
-
-		r25 = RNN(vocab_size,25,vocab_size)
-		r25.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.5, anneal=5, back_steps=2, batch_size=100, min_change=0.0001, log=True)
-		# print("\n==========================\nMatrix U:\n", r25.U, "\nMatrix V:\n", r25.V, "\nMatrix W:\n", r25.W, "\n===========================\n")
-
-		r25 = RNN(vocab_size,25,vocab_size)
-		r25.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.5, anneal=5, back_steps=5, batch_size=100, min_change=0.0001, log=True)
-		# print("\n==========================\nMatrix U:\n", r25.U, "\nMatrix V:\n", r25.V, "\nMatrix W:\n", r25.W, "\n===========================\n")
+		# load test data
+		sents = load_np_dataset(data_folder + '/wiki-test.txt')
+		S_test = docs_to_indices(sents, word_to_num, 0, 0)
+		X_test, D_test = seqs_to_npXY(S_test)
 
 
-		r50 = RNN(vocab_size,50,vocab_size)
-		r50.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.5, anneal=5, back_steps=0, batch_size=100, min_change=0.0001, log=True)
-		# print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
+		r = RNN(vocab_size, hdim, vocab_size)
+		r.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=lr, anneal=5, back_steps=lookback, batch_size=100, min_change=0.0001, log=True)
 
-		r50 = RNN(vocab_size,50,vocab_size)
-		r50.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.5, anneal=5, back_steps=2, batch_size=100, min_change=0.0001, log=True)
-		# print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
+		np.save('rnn.Unp.npy', r.U)
+		np.save('rnn.Vnp.npy', r.V)
+		np.save('rnn.Wnp.npy', r.W)
 
-		r50 = RNN(vocab_size,50,vocab_size)
-		r50.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.5, anneal=5, back_steps=5, batch_size=100, min_change=0.0001, log=True)
-		# print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
+		U = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.Unp.npy')
+		V = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.Vnp.npy')
+		W = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.Wnp.npy')
 
+		r.U = U
+		r.V = V
+		r.W = W
 
-		r25 = RNN(vocab_size,25,vocab_size)
-		r25.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.1, anneal=5, back_steps=0, batch_size=100, min_change=0.0001, log=True)
-		# print("\n==========================\nMatrix U:\n", r25.U, "\nMatrix V:\n", r25.V, "\nMatrix W:\n", r25.W, "\n===========================\n")
-
-		r25 = RNN(vocab_size,25,vocab_size)
-		r25.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.1, anneal=5, back_steps=2, batch_size=100, min_change=0.0001, log=True)
-		# print("\n==========================\nMatrix U:\n", r25.U, "\nMatrix V:\n", r25.V, "\nMatrix W:\n", r25.W, "\n===========================\n")
-	
-		r25 = RNN(vocab_size,25,vocab_size)
-		r25.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.1, anneal=5, back_steps=5, batch_size=100, min_change=0.0001, log=True)
-		# print("\n==========================\nMatrix U:\n", r25.U, "\nMatrix V:\n", r25.V, "\nMatrix W:\n", r25.W, "\n===========================\n")
-
-
-		r50 = RNN(vocab_size,50,vocab_size)
-		r50.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.1, anneal=5, back_steps=0, batch_size=100, min_change=0.0001, log=True)
-		# print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
-
-		r50 = RNN(vocab_size,50,vocab_size)
-		r50.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.1, anneal=5, back_steps=2, batch_size=100, min_change=0.0001, log=True)
-		# print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
-
-		r50 = RNN(vocab_size,50,vocab_size)
-		r50.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.1, anneal=5, back_steps=5, batch_size=100, min_change=0.0001, log=True)
-		# print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
-
-
-		r25 = RNN(vocab_size,25,vocab_size)
-		r25.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.05, anneal=5, back_steps=0, batch_size=100, min_change=0.0001, log=True)
-		# print("\n==========================\nMatrix U:\n", r25.U, "\nMatrix V:\n", r25.V, "\nMatrix W:\n", r25.W, "\n===========================\n")
-
-		r25 = RNN(vocab_size,25,vocab_size)
-		r25.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.05, anneal=5, back_steps=2, batch_size=100, min_change=0.0001, log=True)
-		# print("\n==========================\nMatrix U:\n", r25.U, "\nMatrix V:\n", r25.V, "\nMatrix W:\n", r25.W, "\n===========================\n")
-
-		r25 = RNN(vocab_size,25,vocab_size)
-		r25.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.05, anneal=5, back_steps=5, batch_size=100, min_change=0.0001, log=True)
-		# print("\n==========================\nMatrix U:\n", r25.U, "\nMatrix V:\n", r25.V, "\nMatrix W:\n", r25.W, "\n===========================\n")
-
-
-		r50 = RNN(vocab_size,50,vocab_size)
-		r50.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.05, anneal=5, back_steps=0, batch_size=100, min_change=0.0001, log=True)
-		# print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
-
-		r50 = RNN(vocab_size,50,vocab_size)
-		r50.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.05, anneal=5, back_steps=2, batch_size=100, min_change=0.0001, log=True)
-		# print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
-
-		r50 = RNN(vocab_size,50,vocab_size)
-		r50.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.05, anneal=5, back_steps=5, batch_size=100, min_change=0.0001, log=True)
-		# print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
-
-
-		acc = 0.
+		acc = sum([r.compute_acc_np(X_test[i], D_test[i]) for i in range(len(X_test))]) / len(X_test)
 
 		print("Accuracy: %.03f" % acc)
+
+
+		# r25 = RNN(vocab_size,25,vocab_size)
+		# r25.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.5, anneal=5, back_steps=0, batch_size=100, min_change=0.0001, log=True)
+		# # print("\n==========================\nMatrix U:\n", r25.U, "\nMatrix V:\n", r25.V, "\nMatrix W:\n", r25.W, "\n===========================\n")
+
+		# r25 = RNN(vocab_size,25,vocab_size)
+		# r25.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.5, anneal=5, back_steps=2, batch_size=100, min_change=0.0001, log=True)
+		# # print("\n==========================\nMatrix U:\n", r25.U, "\nMatrix V:\n", r25.V, "\nMatrix W:\n", r25.W, "\n===========================\n")
+
+		# r25 = RNN(vocab_size,25,vocab_size)
+		# r25.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.5, anneal=5, back_steps=5, batch_size=100, min_change=0.0001, log=True)
+		# # print("\n==========================\nMatrix U:\n", r25.U, "\nMatrix V:\n", r25.V, "\nMatrix W:\n", r25.W, "\n===========================\n")
+
+
+		# r50 = RNN(vocab_size,50,vocab_size)
+		# r50.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.5, anneal=5, back_steps=0, batch_size=100, min_change=0.0001, log=True)
+		# # print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
+
+		# r50 = RNN(vocab_size,50,vocab_size)
+		# r50.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.5, anneal=5, back_steps=2, batch_size=100, min_change=0.0001, log=True)
+		# # print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
+
+		# r50 = RNN(vocab_size,50,vocab_size)
+		# r50.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.5, anneal=5, back_steps=5, batch_size=100, min_change=0.0001, log=True)
+		# # print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
+
+
+		# r25 = RNN(vocab_size,25,vocab_size)
+		# r25.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.1, anneal=5, back_steps=0, batch_size=100, min_change=0.0001, log=True)
+		# # print("\n==========================\nMatrix U:\n", r25.U, "\nMatrix V:\n", r25.V, "\nMatrix W:\n", r25.W, "\n===========================\n")
+
+		# r25 = RNN(vocab_size,25,vocab_size)
+		# r25.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.1, anneal=5, back_steps=2, batch_size=100, min_change=0.0001, log=True)
+		# # print("\n==========================\nMatrix U:\n", r25.U, "\nMatrix V:\n", r25.V, "\nMatrix W:\n", r25.W, "\n===========================\n")
+	
+		# r25 = RNN(vocab_size,25,vocab_size)
+		# r25.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.1, anneal=5, back_steps=5, batch_size=100, min_change=0.0001, log=True)
+		# # print("\n==========================\nMatrix U:\n", r25.U, "\nMatrix V:\n", r25.V, "\nMatrix W:\n", r25.W, "\n===========================\n")
+
+
+		# r50 = RNN(vocab_size,50,vocab_size)
+		# r50.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.1, anneal=5, back_steps=0, batch_size=100, min_change=0.0001, log=True)
+		# # print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
+
+		# r50 = RNN(vocab_size,50,vocab_size)
+		# r50.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.1, anneal=5, back_steps=2, batch_size=100, min_change=0.0001, log=True)
+		# # print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
+
+		# r50 = RNN(vocab_size,50,vocab_size)
+		# r50.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.1, anneal=5, back_steps=5, batch_size=100, min_change=0.0001, log=True)
+		# # print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
+
+
+		# r25 = RNN(vocab_size,25,vocab_size)
+		# r25.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.05, anneal=5, back_steps=0, batch_size=100, min_change=0.0001, log=True)
+		# # print("\n==========================\nMatrix U:\n", r25.U, "\nMatrix V:\n", r25.V, "\nMatrix W:\n", r25.W, "\n===========================\n")
+
+		# r25 = RNN(vocab_size,25,vocab_size)
+		# r25.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.05, anneal=5, back_steps=2, batch_size=100, min_change=0.0001, log=True)
+		# # print("\n==========================\nMatrix U:\n", r25.U, "\nMatrix V:\n", r25.V, "\nMatrix W:\n", r25.W, "\n===========================\n")
+
+		# r25 = RNN(vocab_size,25,vocab_size)
+		# r25.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.05, anneal=5, back_steps=5, batch_size=100, min_change=0.0001, log=True)
+		# # print("\n==========================\nMatrix U:\n", r25.U, "\nMatrix V:\n", r25.V, "\nMatrix W:\n", r25.W, "\n===========================\n")
+
+
+		# r50 = RNN(vocab_size,50,vocab_size)
+		# r50.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.05, anneal=5, back_steps=0, batch_size=100, min_change=0.0001, log=True)
+		# # print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
+
+		# r50 = RNN(vocab_size,50,vocab_size)
+		# r50.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.05, anneal=5, back_steps=2, batch_size=100, min_change=0.0001, log=True)
+		# # print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
+
+		# r50 = RNN(vocab_size,50,vocab_size)
+		# r50.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=0.05, anneal=5, back_steps=5, batch_size=100, min_change=0.0001, log=True)
+		# # print("\n==========================\nMatrix U:\n", r50.U, "\nMatrix V:\n", r50.V, "\nMatrix W:\n", r50.W, "\n===========================\n")
 
 
 	if mode == "predict-lm":

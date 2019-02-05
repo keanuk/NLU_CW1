@@ -25,8 +25,6 @@ def fraq_loss(vocab, word_to_num, vocabsize):
 def adjust_loss(loss, fracloss, q, mode='basic'):
     if mode == 'basic':
         # remove freebies only: score if had no UNK
-        print("Fracloss: ", fracloss)
-        print("Loss: ", loss)
         return (loss + fracloss*np.log(fracloss))/(1 - fracloss)
     else:
         # remove freebies, replace with best prediction on remaining
