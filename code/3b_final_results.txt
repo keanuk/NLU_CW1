@@ -230,4 +230,9 @@ epoch 215, learning rate 0.0457	instance 1	epoch done in 291.59 seconds	new loss
 epoch 216, learning rate 0.0455	instance 1	epoch done in 304.14 seconds	new loss: 0.3136606140746937	new acc: 0.888
 epoch 217, learning rate 0.0452	instance 1	epoch done in 804.28 seconds	new loss: 0.3024523685190011	new acc: 0.894
 epoch 218, learning rate 0.0450	instance 1	epoch done in 867.58 seconds	new loss: 0.2867088047496893	new acc: 0.893
-epoch 219, learning rate 0.0448
+epoch 219, learning rate 0.0448	instance 1	epoch done in 1040.38 seconds	new loss: 0.2962765840101443	new acc: 0.89
+epoch 220, learning rate 0.0446	instance 1	epoch done in 839.02 seconds	new loss: 0.2886721009397094	new acc: 0.89
+epoch 221, learning rate 0.0444	instance 1	epoch done in 834.98 seconds	new loss: 0.3028584045141466	new acc: 0.892
+epoch 222, learning rate 0.0442	instance 1	epoch done in 847.22 seconds	new loss: 0.2936029551891384	new acc: 0.891
+epoch 223, learning rate 0.0441	instance 1	epoch done in 827.94 seconds	new loss: 0.2920967127699281	new acc: 0.89
+epoch 224, learning rate 0.0439	instance 1
