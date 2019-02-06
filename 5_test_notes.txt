@@ -6,7 +6,7 @@ Format: python rnn.py train-np ~/Documents/NLU/Courseworks/NLU_CW1/data hdim loo
 Constants:
     train_size = 2000
     dev_size = 1000
-    test_size = FULL
+    test_size = FULL (~4000)
     lookback = 5
     epochs = 10
     python rnn.py train-np ~/Documents/NLU/Courseworks/NLU_CW1/data hdim 5 lr vocab_size 10 anneal batch_size
@@ -83,3 +83,54 @@ Run 2: Higher values
             *Best loss: 0.6299458398336376, (epoch 10)
             *Best loss accuracy: 0.665
             **Accuracy: 0.682
+
+Run 3: Try to maximize values
+    Base values:
+        vocab_size = 2000
+        hdim = 50
+        lr = 0.5
+        anneal = 5
+        batch_size = 100
+        python rnn.py train-np ~/Documents/NLU/Courseworks/NLU_CW1/data 50 5 0.5 2000 10 5 100
+        *Best loss: 0.6019136182193647
+        *Best loss accuracy: 0.674
+        **Accuracy: 0.686
+    Alterations:
+        -vocab_size = 500
+            *Best loss: 0.5977635518937953, (epoch 10)
+            *Best loss accuracy: 0.669
+            **Accuracy: 0.683
+        +hdim = 200
+            *Best loss: 0.5515698618223811 (epoch 10)
+            *Best loss accuracy: 0.732
+            **Accuracy: 0.712
+        +lr = 2
+            *Best loss: 0.5355792734155365 (epoch 10)
+            *Best loss accuracy: 0.716
+            **Accuracy: 0.728
+        +anneal = 20
+            *Best loss: 0.5862996788285524 (epoch 10)
+            *Best loss accuracy: 0.708
+            **Accuracy: 0.705
+        +batch_size = 25
+            *Best loss: 0.5059162955313131, (epoch 10)
+            *Best loss accuracy: 0.772
+            **Accuracy: 0.741
+
+Run 4: Combining best alterations
+    python rnn.py train-np ~/Documents/NLU/Courseworks/NLU_CW1/data 200 5 2 1000 10 20 25
+        *Best loss: 0.47118663814225387 (epoch 10)
+        *Best loss accuracy: 0.776
+        **Accuracy: 0.779
+
+Run 5: Batch size of 1
+    python rnn.py train-np ~/Documents/NLU/Courseworks/NLU_CW1/data 200 5 2 1000 10 20 1
+        *Best loss: 2.5975742572706584 (epoch 4)
+        *Best loss accuracy: 0.687
+        **Accuracy: 0.699
+
+Run 6: Batch size of 10
+    python rnn.py train-np ~/Documents/NLU/Courseworks/NLU_CW1/data 200 5 2 1000 10 20 1
+        *Best loss: 0.4875400325642844 (epoch 7)
+        *Best loss accuracy: 0.775
+        **Accuracy: 0.764
