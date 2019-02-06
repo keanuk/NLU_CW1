@@ -68,11 +68,6 @@ class RNN(object):
 		self.deltaV.fill(0.0)
 		self.deltaW.fill(0.0)
 
-	def getOneHot(self, index):
-		x = np.zeros(self.vocab_size)
-		x[index] = 1
-		return x
-
 	def predict(self, x):
 		'''
 		predict an output sequence y for a given input sequence x
@@ -97,7 +92,7 @@ class RNN(object):
 			##########################
 
 			#Create one hot vector
-			oh = self.getOneHot(x[t])
+			oh = make_onehot(x[t], self.vocab_size)
 
 			# print("One hot vector\n", oh)
 
@@ -127,8 +122,8 @@ class RNN(object):
 			##########################
 			# --- your code here --- #
 			##########################
-			xoh = self.getOneHot(x[t])
-			doh = self.getOneHot(d[t])
+			xoh = make_onehot(x[t], self.vocab_size)
+			doh = make_onehot(d[t], self.vocab_size)
 
 			gprime = np.ones(len(y[t]))
 			fprime = np.multiply(s[t], np.subtract(np.ones(len(s[t])), s[t]))
@@ -164,12 +159,12 @@ class RNN(object):
 
 		t = len(x) - 1
 
-		doh = self.getOneHot(d[0])
+		doh = make_onehot(d[0], self.vocab_size)
 		gprime = np.ones(len(y[-1]))
 		outp = np.multiply(np.subtract(doh, y[-1]), gprime)
 		self.deltaW += np.outer(outp, s[-2])
 
-		xoh = self.getOneHot(x[t])
+		xoh = make_onehot(x[t], self.vocab_size)
 
 		fprime = np.multiply(s[t], np.subtract(np.ones(len(s[t])), s[t]))
 
@@ -203,8 +198,8 @@ class RNN(object):
 			# --- your code here --- #
 			##########################
 
-			xoh = self.getOneHot(x[t])
-			doh = self.getOneHot(d[t])
+			xoh = make_onehot(x[t], self.vocab_size)
+			doh = make_onehot(d[t], self.vocab_size)
 
 			gprime = np.ones(len(y[t]))
 			fprime = np.multiply(s[t], np.subtract(np.ones(len(s[t])), s[t]))
@@ -218,7 +213,7 @@ class RNN(object):
 
 			for i in range(steps):
 				i = i + 1
-				sxoh = self.getOneHot(x[t - i])
+				sxoh = make_onehot(x[t - i], self.vocab_size)
 				sfprime = np.multiply(s[t - i], np.subtract(np.ones(len(s[t - i])), s[t - i]))
 				inp = np.multiply(np.dot(np.transpose(self.U), inp), sfprime)
 
@@ -251,8 +246,8 @@ class RNN(object):
 
 		t = len(x) - 1
 
-		xoh = self.getOneHot(x[t])
-		doh = self.getOneHot(d[0])
+		xoh = make_onehot(x[t], self.vocab_size)
+		doh = make_onehot(d[0], self.vocab_size)
 
 		gprime = np.ones(len(y[t]))
 		fprime = np.multiply(s[t], np.subtract(np.ones(len(s[t])), s[t]))
@@ -268,7 +263,7 @@ class RNN(object):
 			i = i + 1
 			if(len(x) < i):
 				break
-			sxoh = self.getOneHot(x[t - i])
+			sxoh = make_onehot(x[t - i], self.vocab_size)
 			sfprime = np.multiply(s[t - i], np.subtract(np.ones(len(s[t - i])), s[t - i]))
 			inp = np.multiply(np.dot(np.transpose(self.U), inp), sfprime)
 
@@ -298,7 +293,7 @@ class RNN(object):
 		y, s = self.predict(x)
 
 		for t in range(len(d)):
-			doh = self.getOneHot(d[t])
+			doh = make_onehot(d[t], self.vocab_size)
 			loss = loss - np.dot(doh, np.log(y[t]))
 
 		return loss
@@ -324,7 +319,7 @@ class RNN(object):
 
 		y, s = self.predict(x)
 
-		doh = self.getOneHot(d[0])
+		doh = make_onehot(d[0], self.vocab_size)
 		loss = loss - np.dot(doh, np.log(y[-1]))
 
 		return loss
@@ -348,9 +343,9 @@ class RNN(object):
 
 		y, s = self.predict(x)
 
-		# print("y: ", y[-1])
-		# print("d: ", d[0])
-		# print("argmax(y): ", np.argmax(y[-1]))
+		print("prediction vector:\n ", y[-1])
+		print("prediction: ", np.argmax(y[-1]))
+		print("desired: ", d[0])
 
 		if(np.argmax(y[-1]) == d[0]):
 			return 1
