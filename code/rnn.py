@@ -343,10 +343,6 @@ class RNN(object):
 
 		y, s = self.predict(x)
 
-		print("prediction vector:\n ", y[-1])
-		print("prediction: ", np.argmax(y[-1]))
-		print("desired: ", d[0])
-
 		if(np.argmax(y[-1]) == d[0]):
 			return 1
 		else:
@@ -861,13 +857,24 @@ if __name__ == "__main__":
 		starter code for parameter estimation.
 		change this to different values, or use it to get you started with your own testing class
 		'''
-		train_size = 2000
+		train_size = 25000
 		dev_size = 1000
 		vocab_size = 2000
 
 		hdim = int(sys.argv[3])
 		lookback = int(sys.argv[4])
 		lr = float(sys.argv[5])
+
+		#Used for Question 5
+		anneal=5
+		batch_size = 100
+		epochs = 10
+
+		if(len(sys.argv) > 6):
+			vocab_size = int(sys.argv[6])
+			epochs = int(sys.argv[7])
+			anneal = int(sys.argv[8])
+			batch_size = int(sys.argv[9])
 
 		# get the data set vocabulary
 		vocab = pd.read_table(data_folder + "/vocab.wiki.txt", header=None, sep="\s+", index_col=0, names=['count', 'freq'], )
@@ -906,7 +913,7 @@ if __name__ == "__main__":
 
 
 		r = RNN(vocab_size, hdim, vocab_size)
-		r.train_np(X_train, D_train, X_dev, D_dev, epochs=10, learning_rate=lr, anneal=5, back_steps=lookback, batch_size=100, min_change=0.0001, log=True)
+		r.train_np(X_train, D_train, X_dev, D_dev, epochs=epochs, learning_rate=lr, anneal=anneal, back_steps=lookback, batch_size=batch_size, min_change=0.0001, log=True)
 
 		np.save('rnn.Unp.npy', r.U)
 		np.save('rnn.Vnp.npy', r.V)
