@@ -1,0 +1,53 @@
+Format: python rnn.py train-np ~/Documents/NLU/Courseworks/NLU_CW1/data hdim lookback lr vocab_size epochs anneal batch_size
+
+*Best loss and best loss accuracy based on dev set
+**Accuracy based on performance on full test set 
+
+Constants:
+    train_size = 2000
+    dev_size = 1000
+    test_size = FULL
+    lookback = 5
+    epochs = 10
+    python rnn.py train-np ~/Documents/NLU/Courseworks/NLU_CW1/data hdim 5 lr vocab_size 10 anneal batch_size
+
+Variable:
+    vocab_size
+    hdim
+    lr
+    anneal
+    batch_size
+
+Run 1: Lower values
+    Base values:
+        vocab_size = 2000
+        hdim = 50
+        lr = 0.5
+        anneal = 5
+        batch_size = 100
+        python rnn.py train-np ~/Documents/NLU/Courseworks/NLU_CW1/data 50 5 0.5 2000 10 5 100
+        *Best loss:
+        *Best loss accuracy:
+        **Accuracy: 
+    Alterations:
+        vocab_size = 1000
+            *Best loss: 0.5821560186314653 (epoch 10)
+            *Best loss accuracy: 0.68
+            **Accuracy: 0.692
+        hdim = 15
+            *Best loss: 0.6136658489596325 (epoch 10)
+            *Best loss accuracy: 0.684
+            **Accuracy: 0.694
+        lr = 0.1
+            *Best loss: 0.6499571908199566 (epoch 10)
+            *Best loss accuracy: 0.668
+            **Accuracy: 0.683
+        anneal = 1
+            *Best loss: 0.6262350393476706 (epoch 10)
+            *Best loss accuracy: 0.669
+            **Accuracy: 0.683
+        batch_size = 50
+            *Best loss: 0.5555146037570908 (epoch 10)
+            *Best loss accuracy:
+            **Accuracy: 0.716
+      

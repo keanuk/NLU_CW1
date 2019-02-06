@@ -489,10 +489,10 @@ class RNN(object):
 				stdout.write("\tinstance 1")
 			for i in range(len(X)):
 				c = i+1
-				# if log:
-				# 	stdout.write("\b"*len(str(i)))
-				# 	stdout.write("{0}".format(c))
-					# stdout.flush()
+				if log:
+					stdout.write("\b"*len(str(i)))
+					stdout.write("{0}".format(c))
+					stdout.flush()
 				p = permutation[i]
 				x_p = X[p]
 				d_p = D[p]
@@ -631,10 +631,10 @@ class RNN(object):
 				stdout.write("\tinstance 1")
 			for i in range(len(X)):
 				c = i+1
-				# if log:
-				# 	stdout.write("\b"*len(str(i)))
-				# 	stdout.write("{0}".format(c))
-				# 	stdout.flush()
+				if log:
+					stdout.write("\b"*len(str(i)))
+					stdout.write("{0}".format(c))
+					stdout.flush()
 				p = permutation[i]
 				x_p = X[p]
 				d_p = D[p]
@@ -857,7 +857,7 @@ if __name__ == "__main__":
 		starter code for parameter estimation.
 		change this to different values, or use it to get you started with your own testing class
 		'''
-		train_size = 25000
+		train_size = 2000
 		dev_size = 1000
 		vocab_size = 2000
 
