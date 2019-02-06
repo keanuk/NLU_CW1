@@ -34,14 +34,6 @@ Run 1: Lower values
             *Best loss: 0.5821560186314653 (epoch 10)
             *Best loss accuracy: 0.68
             **Accuracy: 0.692
-        +hdim = 15
-            *Best loss: 0.6136658489596325 (epoch 10)
-            *Best loss accuracy: 0.684
-            **Accuracy: 0.694
-        =lr = 0.1
-            *Best loss: 0.6499571908199566 (epoch 10)
-            *Best loss accuracy: 0.668
-            **Accuracy: 0.683
         =anneal = 1
             *Best loss: 0.6262350393476706 (epoch 10)
             *Best loss accuracy: 0.669
@@ -67,14 +59,6 @@ Run 2: Higher values
             *Best loss: 0.6297816158997828, (epoch 9)
             *Best loss accuracy: 0.669
             **Accuracy: 0.683
-        +hdim = 100
-            *Best loss: 0.5679797926112033 (epoch 10)
-            *Best loss accuracy: 0.724
-            **Accuracy: 0.709
-        +lr = 1
-            *Best loss: 0.5728468293490644 (epoch 10)
-            *Best loss accuracy: 0.705
-            **Accuracy: 0.712
         +anneal = 10
             *Best loss: 0.5931426739795183 (epoch 10)
             *Best loss accuracy: 0.691
@@ -100,14 +84,6 @@ Run 3: Try to maximize values
             *Best loss: 0.5977635518937953, (epoch 10)
             *Best loss accuracy: 0.669
             **Accuracy: 0.683
-        +hdim = 200
-            *Best loss: 0.5515698618223811 (epoch 10)
-            *Best loss accuracy: 0.732
-            **Accuracy: 0.712
-        +lr = 2
-            *Best loss: 0.5355792734155365 (epoch 10)
-            *Best loss accuracy: 0.716
-            **Accuracy: 0.728
         +anneal = 20
             *Best loss: 0.5862996788285524 (epoch 10)
             *Best loss accuracy: 0.708
@@ -118,19 +94,31 @@ Run 3: Try to maximize values
             **Accuracy: 0.741
 
 Run 4: Combining best alterations
+    python rnn.py train-np ~/Documents/NLU/Courseworks/NLU_CW1/data 50 5 0.5 1000 10 20 25        
+        *Best loss: 0.509581265841568 (epoch 8)
+        *Best loss accuracy: 0.749
+        **Accuracy: 0.750
+
+Run 5: Increase lr and hdim
     python rnn.py train-np ~/Documents/NLU/Courseworks/NLU_CW1/data 200 5 2 1000 10 20 25
         *Best loss: 0.47118663814225387 (epoch 10)
         *Best loss accuracy: 0.776
         **Accuracy: 0.779
 
-Run 5: Batch size of 1
+Run 6: Batch size of 1
     python rnn.py train-np ~/Documents/NLU/Courseworks/NLU_CW1/data 200 5 2 1000 10 20 1
         *Best loss: 2.5975742572706584 (epoch 4)
         *Best loss accuracy: 0.687
         **Accuracy: 0.699
 
-Run 6: Batch size of 10
+Run 7: Batch size of 10
     python rnn.py train-np ~/Documents/NLU/Courseworks/NLU_CW1/data 200 5 2 1000 10 20 1
         *Best loss: 0.4875400325642844 (epoch 7)
         *Best loss accuracy: 0.775
         **Accuracy: 0.764
+
+Run 8: Anneal of 80
+    python rnn.py train-np ~/Documents/NLU/Courseworks/NLU_CW1/data 200 5 2 1000 10 20 1
+        *Best loss: 0.47472904814252403 (epoch 10)
+        *Best loss accuracy: 0.776
+        **Accuracy: 0.777
