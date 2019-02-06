@@ -915,17 +915,17 @@ if __name__ == "__main__":
 		r = RNN(vocab_size, hdim, vocab_size)
 		r.train_np(X_train, D_train, X_dev, D_dev, epochs=epochs, learning_rate=lr, anneal=anneal, back_steps=lookback, batch_size=batch_size, min_change=0.0001, log=True)
 
-		np.save('rnn.Unp.npy', r.U)
-		np.save('rnn.Vnp.npy', r.V)
-		np.save('rnn.Wnp.npy', r.W)
+		# np.save('rnn.Unp.npy', r.U)
+		# np.save('rnn.Vnp.npy', r.V)
+		# np.save('rnn.Wnp.npy', r.W)
 
-		U = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.Unp.npy')
-		V = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.Vnp.npy')
-		W = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.Wnp.npy')
+		# U = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.Unp.npy')
+		# V = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.Vnp.npy')
+		# W = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.Wnp.npy')
 
-		r.U = U
-		r.V = V
-		r.W = W
+		# r.U = U
+		# r.V = V
+		# r.W = W
 
 		acc = sum([r.compute_acc_np(X_test[i], D_test[i]) for i in range(len(X_test))]) / len(X_test)
 
