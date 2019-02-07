@@ -758,13 +758,13 @@ if __name__ == "__main__":
 		np.save('rnn.V.npy', r.V)
 		np.save('rnn.W.npy', r.W)
 
-		# U = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.U.npy')
-		# V = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.V.npy')
-		# W = np.load('/afs/inf.ed.ac.uk/user/s18/s1890615/Documents/NLU/Courseworks/NLU_CW1/code/rnn.W.npy')
+		U = np.load('rnn.U.npy')
+		V = np.load('rnn.V.npy')
+		W = np.load('rnn.W.npy')
 
-		# r.U = U
-		# r.V = V
-		# r.W = W
+		r.U = U
+		r.V = V
+		r.W = W
 
 		run_loss = r.compute_mean_loss(X_test, D_test)
 		adjusted_loss = adjust_loss(run_loss, fraction_lost, q)
